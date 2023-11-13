@@ -20,8 +20,8 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @PostMapping("/saveProduct")
-    public GenericResponse saveProduct(@RequestBody ProductRequest productRequest) {
+    @PostMapping("/addProduct")
+    public GenericResponse addProduct(@RequestBody ProductRequest productRequest) {
         GenericResponse genericResponse=new GenericResponse();
         ProductResponse productResponse=productService.add(productRequest);
         genericResponse.setData(productResponse);
@@ -31,7 +31,7 @@ public class ProductController {
 
     }
 
-    @GetMapping("/getProducts")
+    @GetMapping("/getAllProducts")
     public Page<Product> getAllProducts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
