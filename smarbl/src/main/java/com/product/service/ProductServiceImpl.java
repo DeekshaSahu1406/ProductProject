@@ -5,6 +5,7 @@ import com.product.Request.ProductRequest;
 import com.product.Request.ProductUpdateRequest;
 import com.product.Response.ProductResponse;
 import com.product.dto.DtoTransformer;
+import com.product.exception.ValidationException;
 import com.product.pojos.Product;
 import com.product.repository.ProductRepository;
 import io.micrometer.common.util.StringUtils;
@@ -47,32 +48,25 @@ public class ProductServiceImpl implements ProductService{
         Product product = DtoTransformer.trasformProductRequestToProduct(productRequest);
         Product productSaved= productRepo.save(product);
         return dtoTransformer.trasformProductToResponse(productSaved);
-
     }
 
     @Override
-    public String delete(Long id) {
+    public String delete(Long id) throws ValidationException {
         // TODO Auto-generated method stub
         if (productRepo.existsById(id)) {
             productRepo.deleteById(id);
             return "Product deleted ....";
         }
-        return "Deletion Failed : Invalid Id !!!!!!!!!!!";
+        throw new ValidationException("product can't be deleted","product id not found");
     }
 
     @Override
-    public Product fetchById(Long id) {
-        // Validate that the id parameter is not null using javax.validation
-        // This annotation is optional and depends on your application's requirements
-
-        // Validate the id parameter
+    public Product fetchById(Long id) throws ValidationException {
         if (id == null) {
-            throw new IllegalArgumentException("Product ID must not be null");
+            throw new ValidationException("product can't be found","Product ID must not be null");
         }
-
         // Assuming 'productRepo' is an instance of JpaRepository<Product, Long>
         Optional<Product> optionalProduct = productRepo.findById(id);
-
         // Check if the product with the given ID exists
         if (optionalProduct.isPresent()) {
             return optionalProduct.get();
@@ -82,35 +76,42 @@ public class ProductServiceImpl implements ProductService{
         }
     }
     @Override
-    public ProductResponse update(ProductUpdateRequest productUpdateRequest) {
-        if(productRepo.existsById(productUpdateRequest.getId())){
-            Product updateProduct = new Product();
-            Product oldProduct = new Product();
-            oldProduct = productRepo.findById(productUpdateRequest.getId()).orElseThrow();
-            updateProduct=dtoTransformer.transformUpdateRequestToProduct(productUpdateRequest);
-            updateProduct.setName(oldProduct.getName());
+    public ProductResponse update(ProductUpdateRequest productUpdateRequest) throws ValidationException {
 
-            return dtoTransformer.trasformProductToResponse(productRepo.save(updateProduct));
+        if (productUpdateRequest != null) {
+            Long productId = productUpdateRequest.getId();
 
+            if (productRepo.existsById(productId)) {
+                Product existingProduct = productRepo.findById(productId).orElseThrow(() ->
+                        new ValidationException("Product can't be updated", "Product not found with id: " + productId)
+                );
+
+                // Update only the properties that should be modified
+                existingProduct = dtoTransformer.transformUpdateRequestToProduct(productUpdateRequest);
+
+                // Save the updated product
+                Product updatedProduct = productRepo.save(existingProduct);
+
+                return dtoTransformer.trasformProductToResponse(updatedProduct);
+            } else {
+                throw new ValidationException("Product can't be updated", "Product not found with id: " + productId);
+            }
+        } else {
+            throw new ValidationException("Product can't be updated", "Product cannot be null");
         }
-
-
-        return null;
     }
 
     @Override
-    public ProductResponse updateName(ProductNameUpdateRequest productNameUpdateRequest) {
+    public ProductResponse updateName(ProductNameUpdateRequest productNameUpdateRequest) throws ValidationException {
         if(productRepo.existsById(productNameUpdateRequest.getId())){
             Product updateProduct = new Product();
             updateProduct = productRepo.findById(productNameUpdateRequest.getId()).orElseThrow();
             updateProduct.setName(productNameUpdateRequest.getName());
-
             return dtoTransformer.trasformProductToResponse(productRepo.save(updateProduct));
-
         }
-
-
-        return null;
+        else{
+            throw new ValidationException("product name can't be updated","product not found");
+        }
     }
 
 
@@ -120,20 +121,30 @@ public class ProductServiceImpl implements ProductService{
         if (StringUtils.isBlank(name)) {
             throw new IllegalArgumentException("Product name must not be blank");
         }
-
         // Assuming 'productRepo' is an instance of JpaRepository<Product, Long>
         return productRepo.findByNameContainingIgnoreCase(name);
     }
 
     @Override
-    public Product getProductbyDesc(String description) {
+    public Page<Product> searchByNameOrDescription(String query, Pageable pageable) {
+        if ( query != null) {
+            // If both name and description are provided, perform OR search
+            return productRepo.findByNameOrDetails(query, pageable);
+        }
+        else {
+            return null;
+        }
+    }
+
+    @Override
+    public Product getProductbyDesc(String details) {
         // Validate that the name parameter is not blank
-        if (StringUtils.isBlank(description)) {
+        if (StringUtils.isBlank(details)) {
             throw new IllegalArgumentException("Product description must not be blank");
         }
 
         // Assuming 'productRepo' is an instance of JpaRepository<Product, Long>
-        return productRepo.findByNameContainingIgnoreCase(description);
+        return productRepo.findByDetails(details);
     }
 
 

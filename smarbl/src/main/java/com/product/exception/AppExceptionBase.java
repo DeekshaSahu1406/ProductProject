@@ -32,5 +32,11 @@ public class AppExceptionBase extends Exception {
         this.errorReason = errorReason;
     }
 
-
+    @Override
+    public String toString() {
+        return "AppExceptionBase{" +
+                "status=" + status +
+                ", errorReason='" + errorReason + '\'' +
+                '}';
+    }
 }

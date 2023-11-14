@@ -9,6 +9,17 @@ public class GenericResponse extends BaseResponse {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long total;
 
+    public void setErrorMessage(String errorMessage) {
+        ErrorMessage = errorMessage;
+    }
+
+    public String getErrorMessage() {
+        return ErrorMessage;
+    }
+
+    @JsonProperty("errorMessage")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String ErrorMessage;
     @JsonProperty("data")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Object data;

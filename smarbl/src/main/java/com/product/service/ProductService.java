@@ -4,6 +4,7 @@ import com.product.Request.ProductNameUpdateRequest;
 import com.product.Request.ProductRequest;
 import com.product.Request.ProductUpdateRequest;
 import com.product.Response.ProductResponse;
+import com.product.exception.ValidationException;
 import com.product.pojos.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,16 +19,18 @@ public interface ProductService {
 
      Page<Product> getAllProductsPaged(Pageable pageable);
 
-    String delete(Long id);
+    String delete(Long id) throws ValidationException;
 
-    Product fetchById(Long id);
+    Product fetchById(Long id) throws ValidationException;
 
-    ProductResponse update(ProductUpdateRequest productUpdateRequest);
+    ProductResponse update(ProductUpdateRequest productUpdateRequest) throws ValidationException;
 
-    ProductResponse updateName(ProductNameUpdateRequest productNameUpdateRequest);
+    ProductResponse updateName(ProductNameUpdateRequest productNameUpdateRequest) throws ValidationException;
 
-    Product getProductbyDesc(String description);
+    Product getProductbyDesc(String details);
 
 
     Product getProductByName(String name);
+
+    Page<Product> searchByNameOrDescription(String query, Pageable pageable);
 }
