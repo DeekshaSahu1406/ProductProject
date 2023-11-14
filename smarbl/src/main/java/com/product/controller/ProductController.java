@@ -16,7 +16,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -34,8 +33,14 @@ public class ProductController {
     private ProductResponsemethods productResponsemethods;
 
 
-
-
+    @Operation(description = "add product",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {
+                            @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Product.class))
+                    }),
+                    @ApiResponse(responseCode = "404")
+            }
+    )
     @PostMapping
     public GenericResponse addProduct(@RequestBody ProductRequest productRequest) {
         GenericResponse genericResponse=new GenericResponse();
@@ -47,6 +52,14 @@ public class ProductController {
 
     }
 
+    @Operation(description = "get all products",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {
+                            @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Product.class))
+                    }),
+                    @ApiResponse(responseCode = "404")
+            }
+    )
     @GetMapping
     public GenericResponse getAllProducts(Pageable pageable ) {
         Page<Product> paginatedProducts = productService.getAllProductsPaged(pageable);
@@ -63,6 +76,14 @@ public class ProductController {
         return genericResponse;
     }
 
+    @Operation(description = "update product",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {
+                            @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Product.class))
+                    }),
+                    @ApiResponse(responseCode = "404")
+            }
+    )
     @PutMapping
     public GenericResponse updateProduct(@RequestBody ProductUpdateRequest productUpdateRequest) throws ValidationException {
         try{
@@ -107,6 +128,15 @@ public class ProductController {
         return genericResponse;
     }
 
+
+    @Operation(description = "search by name",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {
+                            @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Product.class))
+                    }),
+                    @ApiResponse(responseCode = "404")
+            }
+    )
     @GetMapping("/searchByName")
     public GenericResponse getProductByName(@RequestParam String name) {
         Product product=productService.getProductByName(name);
@@ -117,6 +147,15 @@ public class ProductController {
         return genericResponse;
     }
 
+
+    @Operation(description = "search by description",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {
+                            @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Product.class))
+                    }),
+                    @ApiResponse(responseCode = "404")
+            }
+    )
     @GetMapping("/searchByDesc")
     public GenericResponse getProductByDesc(@RequestParam String desc) {
         Product product=productService.getProductbyDesc(desc);
@@ -149,6 +188,15 @@ public class ProductController {
 //        }
 //    }
 
+
+    @Operation(description = "search by name or description",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {
+                            @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Product.class))
+                    }),
+                    @ApiResponse(responseCode = "404")
+            }
+    )
     @GetMapping("/search")
     public GenericResponse searchProductByNameOrDescription(
             @RequestParam String query,
@@ -181,6 +229,14 @@ public class ProductController {
     }
 
 
+    @Operation(description = "delete product by id",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {
+                            @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Product.class))
+                    }),
+                    @ApiResponse(responseCode = "404")
+            }
+    )
     @DeleteMapping("/{id}")
     public GenericResponse DeleteProduct(@PathVariable Long id) throws ValidationException {
         GenericResponse genericResponse=new GenericResponse();
@@ -190,8 +246,15 @@ public class ProductController {
 
     }
 
-
-    @PutMapping("/updateProductName") //there is some issue with this
+    @Operation(description = "update product by name",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {
+                            @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Product.class))
+                    }),
+                    @ApiResponse(responseCode = "404")
+            }
+    )
+    @PutMapping("/updateProductName")
     public GenericResponse updateProductName(@RequestBody ProductNameUpdateRequest productNameUpdateRequest) throws ValidationException {
         ProductResponse productResponse=productService.updateName(productNameUpdateRequest);
         GenericResponse genericResponse=new GenericResponse();
@@ -208,6 +271,5 @@ public class ProductController {
 
         return genericResponse;
     }
-
 
 }

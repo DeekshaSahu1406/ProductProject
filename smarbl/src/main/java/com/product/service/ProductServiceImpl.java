@@ -26,10 +26,8 @@ public class ProductServiceImpl implements ProductService{
     @Autowired
     private ProductRepository productRepo;
 
-
     @Autowired
     private DtoTransformer dtoTransformer;
-
 
     @Override
     public List<Product> getAllProducts() {
@@ -75,6 +73,7 @@ public class ProductServiceImpl implements ProductService{
             throw new EntityNotFoundException("Product with ID " + id + " not found");
         }
     }
+
     @Override
     public ProductResponse update(ProductUpdateRequest productUpdateRequest) throws ValidationException {
 
@@ -113,7 +112,6 @@ public class ProductServiceImpl implements ProductService{
             throw new ValidationException("product name can't be updated","product not found");
         }
     }
-
 
     @Override
     public Product getProductByName(String name) {
