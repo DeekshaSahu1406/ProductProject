@@ -86,21 +86,14 @@ public class ProductController {
     )
     @PutMapping
     public GenericResponse updateProduct(@RequestBody ProductUpdateRequest productUpdateRequest) throws ValidationException {
-        try{
+
         ProductResponse productResponse=productService.update(productUpdateRequest);
         GenericResponse genericResponse=new GenericResponse();
             genericResponse.setMessage("product Updated successfully");
             genericResponse.setStatus(HttpStatus.OK.toString());
             genericResponse.setData(productResponse);
         return genericResponse;
-    }
-        catch (ValidationException ve) {
-            return validationExceptionHandler.handleValidationException(ve);
 
-
-        } catch (Exception e) {
-            return validationExceptionHandler.handleGenericException(e);
-        }
     }
 
 
@@ -138,7 +131,7 @@ public class ProductController {
             }
     )
     @GetMapping("/searchByName")
-    public GenericResponse getProductByName(@RequestParam String name) {
+    public GenericResponse getProductByName(@RequestParam String name) throws ValidationException {
         Product product=productService.getProductByName(name);
         GenericResponse genericResponse=new GenericResponse();
         genericResponse.setMessage("product fetched successfully");
@@ -157,7 +150,7 @@ public class ProductController {
             }
     )
     @GetMapping("/searchByDesc")
-    public GenericResponse getProductByDesc(@RequestParam String desc) {
+    public GenericResponse getProductByDesc(@RequestParam String desc) throws ValidationException {
         Product product=productService.getProductbyDesc(desc);
         GenericResponse genericResponse=new GenericResponse();
         genericResponse.setMessage("product fetched successfully");
@@ -201,9 +194,7 @@ public class ProductController {
     public GenericResponse searchProductByNameOrDescription(
             @RequestParam String query,
             Pageable pageable
-    ) {
-        try {
-            // Perform any necessary authentication or authorization checks here if needed
+    ) throws ValidationException { // Perform any necessary authentication or authorization checks here if needed
 
             GenericResponse genericResponse = new GenericResponse();
             genericResponse.setStatus(HttpStatus.OK.toString());
@@ -217,15 +208,6 @@ public class ProductController {
             genericResponse.setData(productResponsePage.getContent());
 
             return genericResponse;
-        } catch (Exception e) {
-            // Log the exception or handle it as needed
-            // You might want to return a specific error response here
-            GenericResponse errorResponse = new GenericResponse();
-            errorResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.toString());
-            errorResponse.setMessage("Error searching products");
-            // Set additional error details if necessary
-            return errorResponse;
-        }
     }
 
 

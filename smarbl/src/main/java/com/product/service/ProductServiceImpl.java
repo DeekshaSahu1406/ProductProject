@@ -114,31 +114,31 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public Product getProductByName(String name) {
+    public Product getProductByName(String name) throws ValidationException {
         // Validate that the name parameter is not blank
         if (StringUtils.isBlank(name)) {
-            throw new IllegalArgumentException("Product name must not be blank");
+            throw new ValidationException("Product not found","name or description not found");
         }
         // Assuming 'productRepo' is an instance of JpaRepository<Product, Long>
         return productRepo.findByNameContainingIgnoreCase(name);
     }
 
     @Override
-    public Page<Product> searchByNameOrDescription(String query, Pageable pageable) {
+    public Page<Product> searchByNameOrDescription(String query, Pageable pageable) throws ValidationException {
         if ( query != null) {
             // If both name and description are provided, perform OR search
             return productRepo.findByNameOrDetails(query, pageable);
         }
         else {
-            return null;
+            throw new ValidationException("product not found","name or description not found");
         }
     }
 
     @Override
-    public Product getProductbyDesc(String details) {
+    public Product getProductbyDesc(String details) throws ValidationException {
         // Validate that the name parameter is not blank
         if (StringUtils.isBlank(details)) {
-            throw new IllegalArgumentException("Product description must not be blank");
+            throw new ValidationException("product not found","description not found");
         }
 
         // Assuming 'productRepo' is an instance of JpaRepository<Product, Long>

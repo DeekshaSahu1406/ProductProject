@@ -27,10 +27,10 @@ public interface ProductService {
 
     ProductResponse updateName(ProductNameUpdateRequest productNameUpdateRequest) throws ValidationException;
 
-    Product getProductbyDesc(String details);
+    Product getProductbyDesc(String details) throws ValidationException;
 
 
-    Product getProductByName(String name);
+    Product getProductByName(String name) throws ValidationException;
 
-    Page<Product> searchByNameOrDescription(String query, Pageable pageable);
+    Page<Product> searchByNameOrDescription(String query, Pageable pageable) throws ValidationException;
 }
