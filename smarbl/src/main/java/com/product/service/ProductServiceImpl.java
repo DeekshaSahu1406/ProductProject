@@ -70,7 +70,7 @@ public class ProductServiceImpl implements ProductService{
             return optionalProduct.get();
         } else {
             // Handle the case where the product with the given ID is not found
-            throw new EntityNotFoundException("Product with ID " + id + " not found");
+            throw new ValidationException("product not found","Product ID not found");
         }
     }
 

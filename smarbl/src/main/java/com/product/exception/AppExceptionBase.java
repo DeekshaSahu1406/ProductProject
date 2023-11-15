@@ -1,10 +1,20 @@
 package com.product.exception;
 
+import com.product.Enum.ErrorCode;
 import org.springframework.http.HttpStatus;
 
 public class AppExceptionBase extends Exception {
     private HttpStatus status;
     private String errorReason;
+    private ErrorCode errorCode;
+
+    public ErrorCode getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(ErrorCode errorCode) {
+        this.errorCode = errorCode;
+    }
 
     public AppExceptionBase(String message){
         super(message);
@@ -37,6 +47,7 @@ public class AppExceptionBase extends Exception {
         return "AppExceptionBase{" +
                 "status=" + status +
                 ", errorReason='" + errorReason + '\'' +
+                ", errorCode=" + errorCode +
                 '}';
     }
 }
