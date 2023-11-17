@@ -15,22 +15,22 @@ public interface ProductService {
 
     List<Product> getAllProducts();
 
-    ProductResponse add(ProductRequest transientProduct);
+    ProductResponse addProduct(ProductRequest transientProduct);
 
-     Page<Product> getAllProductsPaged(Pageable pageable);
+     Page<ProductResponse> getAllProductsPaged(Pageable pageable);
 
-    String delete(Long id) throws ValidationException;
+    String deleteProductById(Long id) throws ValidationException;
 
-    Product fetchById(Long id) throws ValidationException;
+    ProductResponse getProductById(Long id) throws ValidationException;
 
-    ProductResponse update(ProductUpdateRequest productUpdateRequest) throws ValidationException;
+    ProductResponse updateProduct(ProductRequest productRequest) throws ValidationException;
 
-    ProductResponse updateName(ProductNameUpdateRequest productNameUpdateRequest) throws ValidationException;
+    ProductResponse updateProductName(ProductNameUpdateRequest productNameUpdateRequest) throws ValidationException;
 
-    Product getProductbyDesc(String details) throws ValidationException;
+    ProductResponse getProductbyDesc(String details) throws ValidationException;
 
 
-    Product getProductByName(String name) throws ValidationException;
+    ProductResponse getProductByName(String name) throws ValidationException;
 
-    Page<Product> searchByNameOrDescription(String query, Pageable pageable) throws ValidationException;
+    Page<ProductResponse> searchProductByNameOrDescription(String query, Pageable pageable) throws ValidationException;
 }

@@ -44,7 +44,7 @@ public class ProductController {
     @PostMapping
     public GenericResponse addProduct(@RequestBody ProductRequest productRequest) {
         GenericResponse genericResponse=new GenericResponse();
-        ProductResponse productResponse=productService.add(productRequest);
+        ProductResponse productResponse=productService.addProduct(productRequest);
         genericResponse.setData(productResponse);
         genericResponse.setMessage("Product added sucessfully");
         genericResponse.setStatus(HttpStatus.CREATED.toString());
@@ -62,7 +62,7 @@ public class ProductController {
     )
     @GetMapping
     public GenericResponse getAllProducts(Pageable pageable ) {
-        Page<Product> paginatedProducts = productService.getAllProductsPaged(pageable);
+        Page<ProductResponse> paginatedProducts = productService.getAllProductsPaged(pageable);
 
         GenericResponse genericResponse=new GenericResponse();
         genericResponse.setMessage("list fetched successfully");
@@ -72,7 +72,6 @@ public class ProductController {
         genericResponse.setPageNum(paginatedProducts.getNumber());
         genericResponse.setData(paginatedProducts.getContent());
 
-        // Call the ProductService method to retrieve paginated products
         return genericResponse;
     }
 
@@ -85,9 +84,9 @@ public class ProductController {
             }
     )
     @PutMapping
-    public GenericResponse updateProduct(@RequestBody ProductUpdateRequest productUpdateRequest) throws ValidationException {
+    public GenericResponse updateProduct(@RequestBody ProductRequest productRequest) throws ValidationException {
 
-        ProductResponse productResponse=productService.update(productUpdateRequest);
+        ProductResponse productResponse=productService.updateProduct(productRequest);
         GenericResponse genericResponse=new GenericResponse();
             genericResponse.setMessage("product Updated successfully");
             genericResponse.setStatus(HttpStatus.OK.toString());
@@ -107,16 +106,16 @@ public class ProductController {
     )
     @GetMapping("/{id}")
     public GenericResponse getProductById(@PathVariable Long id) throws ValidationException {
-        Product product=productService.fetchById(id);
+        ProductResponse productResponse=productService.getProductById(id);
         GenericResponse genericResponse=new GenericResponse();
-        if (product != null) {
+        if (productResponse != null) {
         genericResponse.setMessage("product fetched successfully");
         genericResponse.setStatus(HttpStatus.OK.toString());
-        genericResponse.setData(product);
+        genericResponse.setData(productResponse);
         }
         else {
             genericResponse.setStatus(HttpStatus.NOT_FOUND.toString());
-            genericResponse.setMessage("Product Not Found");
+            genericResponse.setMessage("Product Not Found invalid id: "+id);
         }
         return genericResponse;
     }
@@ -132,11 +131,11 @@ public class ProductController {
     )
     @GetMapping("/searchByName")
     public GenericResponse getProductByName(@RequestParam String name) throws ValidationException {
-        Product product=productService.getProductByName(name);
+        ProductResponse productResponse=productService.getProductByName(name);
         GenericResponse genericResponse=new GenericResponse();
         genericResponse.setMessage("product fetched successfully");
         genericResponse.setStatus(HttpStatus.OK.toString());
-        genericResponse.setData(product);
+        genericResponse.setData(productResponse);
         return genericResponse;
     }
 
@@ -151,11 +150,11 @@ public class ProductController {
     )
     @GetMapping("/searchByDesc")
     public GenericResponse getProductByDesc(@RequestParam String desc) throws ValidationException {
-        Product product=productService.getProductbyDesc(desc);
+        ProductResponse productResponse=productService.getProductbyDesc(desc);
         GenericResponse genericResponse=new GenericResponse();
         genericResponse.setMessage("product fetched successfully");
         genericResponse.setStatus(HttpStatus.OK.toString());
-        genericResponse.setData(product);
+        genericResponse.setData(productResponse);
         return genericResponse;
     }
 
@@ -194,13 +193,12 @@ public class ProductController {
     public GenericResponse searchProductByNameOrDescription(
             @RequestParam String query,
             Pageable pageable
-    ) throws ValidationException { // Perform any necessary authentication or authorization checks here if needed
-
+    ) throws ValidationException {
             GenericResponse genericResponse = new GenericResponse();
             genericResponse.setStatus(HttpStatus.OK.toString());
             genericResponse.setMessage("List of products matching the search criteria");
 
-            Page<Product> productResponsePage = productService.searchByNameOrDescription(query, pageable);
+            Page<ProductResponse> productResponsePage = productService.searchProductByNameOrDescription(query, pageable);
 
             genericResponse.setTotal(productResponsePage.getTotalElements());
             genericResponse.setTotalPages(productResponsePage.getTotalPages());
@@ -222,7 +220,7 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public GenericResponse DeleteProduct(@PathVariable Long id) throws ValidationException {
         GenericResponse genericResponse=new GenericResponse();
-        genericResponse.setMessage(productService.delete(id));
+        genericResponse.setMessage(productService.deleteProductById(id));
         genericResponse.setStatus(HttpStatus.OK.toString());
         return genericResponse;
 
@@ -238,7 +236,7 @@ public class ProductController {
     )
     @PutMapping("/updateProductName")
     public GenericResponse updateProductName(@RequestBody ProductNameUpdateRequest productNameUpdateRequest) throws ValidationException {
-        ProductResponse productResponse=productService.updateName(productNameUpdateRequest);
+        ProductResponse productResponse=productService.updateProductName(productNameUpdateRequest);
         GenericResponse genericResponse=new GenericResponse();
         if(productResponse != null){
 

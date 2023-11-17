@@ -1,11 +1,14 @@
 package com.product.Response;
 
+import com.product.pojos.BaseEntity;
+import com.product.pojos.Product;
 import jakarta.persistence.Column;
-import lombok.Data;
+import lombok.*;
 
 @Data
-public class ProductResponse {
-
+@NoArgsConstructor
+@AllArgsConstructor
+public class ProductResponse extends BaseEntity {
 
     private String name;
 
@@ -16,4 +19,13 @@ public class ProductResponse {
     private double price;
 
     private double discount;
+
+    public ProductResponse(Product product) {
+        // Constructor logic to convert Product to ProductResponse
+        this.name = product.getName();
+        this.details = product.getDetails();
+        this.price = product.getPrice();
+        this.discount = product.getDiscount();
+        // Map other properties as needed
+    }
 }

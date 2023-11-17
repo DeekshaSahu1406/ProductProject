@@ -1,10 +1,11 @@
 package com.product.Request;
 
+import com.product.pojos.BaseEntity;
 import jakarta.persistence.Column;
 import lombok.Data;
 
 @Data
-public class ProductRequest {
+public class ProductRequest extends BaseEntity {
 
     private String name;
 

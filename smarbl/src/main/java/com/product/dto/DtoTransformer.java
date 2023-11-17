@@ -5,6 +5,7 @@ import com.product.Request.ProductUpdateRequest;
 import com.product.Response.ProductResponse;
 import com.product.pojos.Product;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 
@@ -15,7 +16,7 @@ public class DtoTransformer {
         BeanUtils.copyProperties(productRequest,product);
         return product;
     }
-    public static ProductResponse trasformProductToResponse(Product product) {
+    public ProductResponse trasformProductToResponse(Product product) {
         ProductResponse productResponse =new ProductResponse();
         BeanUtils.copyProperties(product,productResponse);
         return productResponse;
@@ -25,6 +26,10 @@ public class DtoTransformer {
         Product product =new Product();
         BeanUtils.copyProperties(productUpdateRequest,product);
         return product;
+    }
+
+    public Page<ProductResponse> convertPageToProductResponse(Page<Product> productPage) {
+        return productPage.map(this::trasformProductToResponse);
     }
 
 }
