@@ -61,7 +61,7 @@ public class ProductController {
             }
     )
     @GetMapping
-    public GenericResponse getAllProducts(Pageable pageable ) {
+    public GenericResponse getAllProducts( Pageable pageable ) {
         Page<ProductResponse> paginatedProducts = productService.getAllProductsPaged(pageable);
 
         GenericResponse genericResponse=new GenericResponse();
