@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/products")
-@CrossOrigin
+@CrossOrigin(origins = "*")
 public class ProductController {
     @Autowired
     private ProductService productService;

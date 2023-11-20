@@ -5,6 +5,7 @@ import com.product.LoginEnum.LoginCredentials;
 import com.product.pojos.User;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/admin")
 public class UserController {
